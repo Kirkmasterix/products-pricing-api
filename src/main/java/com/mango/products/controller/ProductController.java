@@ -20,9 +20,7 @@ public class ProductController {
 
     @PostMapping
     public ProductResponse create(@RequestBody CreateProductRequest request) {
-        var product = ProductMapper.toEntity(request);
-        var saved = productService.createProduct(product);
-        return ProductMapper.toResponse(saved);
+        return ProductMapper.toResponse(productService.createProduct(request));
     }
 
     @GetMapping

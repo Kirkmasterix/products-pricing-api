@@ -1,6 +1,8 @@
 package com.mango.products.service.impl;
 
 import com.mango.products.domain.Product;
+import com.mango.products.dto.CreateProductRequest;
+import com.mango.products.mapper.ProductMapper;
 import com.mango.products.repository.ProductRepository;
 import com.mango.products.service.IProductService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,8 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public Product createProduct(Product product) {
+    public Product createProduct(CreateProductRequest request) {
+        Product product = ProductMapper.toEntity(request);
         return productRepository.save(product);
     }
 
