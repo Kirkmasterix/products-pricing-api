@@ -2,20 +2,21 @@ package com.mango.products.service.impl;
 
 import com.mango.products.domain.Price;
 import com.mango.products.repository.PriceRepository;
+import com.mango.products.repository.ProductRepository;
 import com.mango.products.service.IPriceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PriceService implements IPriceService {
 
     private final PriceRepository priceRepository;
 
-    public PriceService(PriceRepository priceRepository) {
-        this.priceRepository = priceRepository;
-    }
+    private final ProductRepository productRepository;
 
     @Override
     public Price addPrice(Price price) {
