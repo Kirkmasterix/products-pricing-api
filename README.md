@@ -73,6 +73,7 @@ Debes implementar los siguientes endpoints:
           },
           {
             "value": 199.99,
+      
             "initDate": "2025-01-01",
             "endDate": "2025-06-30"
           },
