@@ -1,6 +1,9 @@
 package com.mango.products.service.impl;
 
 import com.mango.products.domain.Price;
+import com.mango.products.domain.Product;
+import com.mango.products.dto.CreatePriceRequest;
+import com.mango.products.mapper.PriceMapper;
 import com.mango.products.repository.PriceRepository;
 import com.mango.products.repository.ProductRepository;
 import com.mango.products.service.IPriceService;
@@ -19,8 +22,15 @@ public class PriceService implements IPriceService {
     private final ProductRepository productRepository;
 
     @Override
-    public Price addPrice(Price price) {
+    public Price addPrice(CreatePriceRequest request) {
+
+        Product product = productRepository.findById(request.productId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        Price price = PriceMapper.toEntity(request, product);
+
         validateNoOverlapping(price);
+
         return priceRepository.save(price);
     }
 
