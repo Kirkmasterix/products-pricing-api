@@ -1,6 +1,10 @@
 package com.mango.products.dto;
 
+import java.time.LocalDate;
+
 public record CreateProductRequest(
         String name,
-        String description
+        String description,
+        Double initialPrice,
+        LocalDate startDate
 ) {}
