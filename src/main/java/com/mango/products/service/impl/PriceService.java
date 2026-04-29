@@ -9,6 +9,7 @@ import com.mango.products.repository.ProductRepository;
 import com.mango.products.service.IPriceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.mango.products.exception.*;
 
 import java.time.LocalDate;
 
@@ -24,7 +25,7 @@ public class PriceService implements IPriceService {
     public Price addPrice(CreatePriceRequest request) {
 
         Product product = productRepository.findById(request.productId())
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException(request.productId()));
 
         // buscar precio activo actual
         Price current = priceRepository
@@ -33,7 +34,9 @@ public class PriceService implements IPriceService {
 
         // validación
         if (current != null && request.initDate().isBefore(current.getInitDate())) {
-            throw new RuntimeException("New price date cannot be before current price");
+            throw new InvalidPriceDateException(
+                    "New price date cannot be before current price"
+            );
         }
 
         // cerrar el anterior
@@ -52,7 +55,9 @@ public class PriceService implements IPriceService {
     @Override
     public Price getPriceForDate(Long productId, LocalDate date) {
         return priceRepository.findActivePrice(productId, date)
-                .orElseThrow(() -> new RuntimeException("No price for date: " + date));
+                .orElseThrow(() -> new PriceNotFoundException(
+                        "No price for product " + productId + " at date " + date
+                ));
     }
 
 }
