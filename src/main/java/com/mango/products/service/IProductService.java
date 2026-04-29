@@ -12,4 +12,6 @@ public interface IProductService {
     List<Product> getAllProducts();
 
     Product getById(Long id);
+
+    Product getProductWithPrices(Long id);
 }

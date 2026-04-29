@@ -46,4 +46,10 @@ public class ProductService implements IProductService {
         return productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found: " + id));
     }
+
+    @Override
+    public Product getProductWithPrices(Long id) {
+        return productRepository.findByIdWithPrices(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+    }
 }
