@@ -5,6 +5,5 @@ import java.time.LocalDate;
 public record CreatePriceRequest(
         Double value,
         LocalDate initDate,
-        LocalDate endDate,
         Long productId
 ) {}
