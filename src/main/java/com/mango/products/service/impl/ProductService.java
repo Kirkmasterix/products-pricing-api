@@ -9,6 +9,7 @@ import com.mango.products.service.IPriceService;
 import com.mango.products.service.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.mango.products.exception.*;
 
 import java.util.List;
 
@@ -44,12 +45,12 @@ public class ProductService implements IProductService {
     @Override
     public Product getById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found: " + id));
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     @Override
     public Product getProductWithPrices(Long id) {
         return productRepository.findByIdWithPrices(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 }
