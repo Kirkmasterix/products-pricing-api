@@ -3,6 +3,7 @@ package com.mango.products.mapper;
 import com.mango.products.domain.Product;
 import com.mango.products.dto.CreateProductRequest;
 import com.mango.products.dto.ProductResponse;
+import com.mango.products.dto.ProductWithPricesResponse;
 
 public class ProductMapper {
 
@@ -18,6 +19,18 @@ public class ProductMapper {
                 product.getId(),
                 product.getName(),
                 product.getDescription()
+        );
+    }
+
+    public static ProductWithPricesResponse toResponseWithPrices(Product product) {
+        return new ProductWithPricesResponse(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrices()
+                        .stream()
+                        .map(PriceMapper::toResponse)
+                        .toList()
         );
     }
 }
