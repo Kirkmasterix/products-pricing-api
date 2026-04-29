@@ -11,7 +11,7 @@ public class PriceMapper {
         Price price = new Price();
         price.setValue(request.value());
         price.setInitDate(request.initDate());
-        price.setEndDate(request.endDate());
+        price.setEndDate(null);
         price.setProduct(product);
         return price;
     }
