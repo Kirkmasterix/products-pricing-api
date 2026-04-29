@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,35 +26,33 @@ public class PriceService implements IPriceService {
         Product product = productRepository.findById(request.productId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        Price price = PriceMapper.toEntity(request, product);
+        // buscar precio activo actual
+        Price current = priceRepository
+                .findFirstByProductIdAndEndDateIsNull(product.getId())
+                .orElse(null);
 
-        validateNoOverlapping(price);
+        // validación
+        if (current != null && request.initDate().isBefore(current.getInitDate())) {
+            throw new RuntimeException("New price date cannot be before current price");
+        }
 
-        return priceRepository.save(price);
+        // cerrar el anterior
+        if (current != null) {
+            current.setEndDate(request.initDate().minusDays(1));
+            priceRepository.save(current);
+        }
+
+        // crear nuevo precio activo
+        Price newPrice = PriceMapper.toEntity(request, product);
+        newPrice.setEndDate(null);
+
+        return priceRepository.save(newPrice);
     }
 
     @Override
     public Price getPriceForDate(Long productId, LocalDate date) {
-        return priceRepository
-                .findByProductIdAndInitDateLessThanEqualAndEndDateGreaterThanEqual(
-                        productId, date, date
-                )
-                .stream()
-                .findFirst()
+        return priceRepository.findActivePrice(productId, date)
                 .orElseThrow(() -> new RuntimeException("No price for date: " + date));
     }
 
-    private void validateNoOverlapping(Price newPrice) {
-        List<Price> existing = priceRepository.findByProductId(newPrice.getProduct().getId());
-
-        for (Price p : existing) {
-            boolean overlaps =
-                    !(newPrice.getEndDate().isBefore(p.getInitDate()) ||
-                            newPrice.getInitDate().isAfter(p.getEndDate()));
-
-            if (overlaps) {
-                throw new RuntimeException("Price range overlaps with existing price");
-            }
-        }
-    }
 }
