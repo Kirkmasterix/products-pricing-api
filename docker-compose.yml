@@ -12,11 +12,13 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d products_db"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 20
+      start_period: 10s
 
   app:
     build:
@@ -26,14 +28,26 @@ services:
     restart: unless-stopped
     ports:
       - "9090:8080"
+
     depends_on:
       db:
         condition: service_healthy
+
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/products_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SERVER_PORT: 8080
+
+  k6:
+    image: grafana/k6
+    container_name: products-k6
+    depends_on:
+      - app
+    volumes:
+      - ./k6:/scripts
+    working_dir: /scripts
+    command: run load-test.js
 
 volumes:
   postgres_data:
