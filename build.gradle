@@ -30,7 +30,18 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
+	testImplementation platform('org.testcontainers:testcontainers-bom:1.19.8')
+	testImplementation 'org.testcontainers:testcontainers'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+	systemProperties = [
+		'docker.client.strategy': 'org.testcontainers.dockerclient.WindowsEngineClient',
+		'testcontainers.debug': 'true'
+	]
 }
 
 tasks.named('test') {
