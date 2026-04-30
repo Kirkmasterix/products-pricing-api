@@ -53,9 +53,10 @@ PostgreSQL
 
 Test de rendimiento con k6
 
-⚠️ Problema común: Docker Desktop no arranca
+Los test unitarios y de integración se corren manualmente en sus clases
 
-Si Docker Compose no funciona correctamente:
+⚠️ Problema común: Al intentar correr un test de integración, testcontainers no logra conectarse con docker
+
 
 🔹 Solución
 
