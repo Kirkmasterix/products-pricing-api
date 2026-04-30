@@ -18,6 +18,7 @@ public class Price {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "price_value")
     private Double value;
 
     private LocalDate initDate;
